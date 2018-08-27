@@ -1,4 +1,4 @@
-package WavFile;
+package audioProcessing;
 
 import java.io.*;
 

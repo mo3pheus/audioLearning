@@ -8,7 +8,7 @@ import utils.FileUtil;
 
 import java.io.*;
 
-import WavFile.WavFile;
+import audioProcessing.WavFile;
 
 import java.nio.file.Path;
 import java.util.Properties;
