@@ -34,6 +34,10 @@ public class SoundMetaData {
         }
     }
 
+    public List<Path> getAllFiles() {
+        return allFiles;
+    }
+
     public List<String> getManuallyVerifiedFiles(String metaDataFile) {
         try {
             String dataLine = "";
