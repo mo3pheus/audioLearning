@@ -15,10 +15,12 @@ import java.util.*;
 public class SoundMetaData {
 
     private Map<String, String> labelledDataset = new HashMap<>();
+    private Map<String, List<String>> mappedLabels = new HashMap<>();
     private Logger logger = LoggerFactory.getLogger(SoundMetaData.class);
     private List<Path> allFiles = new ArrayList<>();
     private List<String> manuallyVerifiedFiles = new ArrayList<>();
     private Set<String> manuallyVerifiedClasses = new HashSet<>();
+    private Set<String> uniqueLabels = new HashSet<>();
 
     public void initializeLabelledData(String audioResourcePath) {
         try {
@@ -74,11 +76,18 @@ public class SoundMetaData {
         Map<String, Integer> classComposition = new HashMap<>();
 
         for (String key : labelledDataset.keySet()) {
-            if (classComposition.containsKey(labelledDataset.get(key))) {
-                int count = classComposition.get(labelledDataset.get(key));
-                classComposition.put(labelledDataset.get(key), ++count);
+            String clasz = labelledDataset.get(key);
+            if (classComposition.containsKey(clasz)) {
+                int count = classComposition.get(clasz);
+                classComposition.put(clasz, ++count);
+                List<String> temp = mappedLabels.get(clasz);
+                temp.add(key);
+                mappedLabels.put(clasz, temp);
             } else {
-                classComposition.put(labelledDataset.get(key), 1);
+                classComposition.put(clasz, 1);
+                List<String> temp = new ArrayList<>();
+                temp.add(key);
+                mappedLabels.put(clasz, temp);
             }
         }
 
@@ -87,5 +96,9 @@ public class SoundMetaData {
 
     public Map<String, String> getLabelledDataset() {
         return labelledDataset;
+    }
+
+    public Map<String, List<String>> getMappedLabels() {
+        return mappedLabels;
     }
 }

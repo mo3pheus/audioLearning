@@ -1,9 +1,6 @@
 package utils;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +27,23 @@ public class FileUtil {
         for (Path path : paths) {
             bufferedWriter.write(path.toString() + "\n");
         }
+        bufferedWriter.close();
+    }
+
+    public static void writeMappedLabelsToDisk(Map<String, List<String>> mappedLabels, String fileName) throws IOException {
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(new File(fileName)));
+
+        for (String key : mappedLabels.keySet()) {
+            String content = (key + ",");
+            List<String> files = mappedLabels.get(key);
+            int i = 0;
+            for (; i < (files.size() - 1); i++) {
+                content += files.get(i) + ":";
+            }
+            content += files.get(i) + "\n";
+            bufferedWriter.write(content);
+        }
+
         bufferedWriter.close();
     }
 }

@@ -45,6 +45,7 @@ public class Driver {
                     ("audio.resources.class.compositionFile"));
             //processAudioFiles(soundMetaData);
             FileUtil.writeFileNamesToDisk(soundMetaData.getAllFiles(), projectProperties.getProperty("audio.resources.train.fileList"));
+            FileUtil.writeMappedLabelsToDisk(soundMetaData.getMappedLabels(),projectProperties.getProperty("audio.resources.train.mappedLabelsFile"));
         } catch (IOException io) {
             logger.error("Error while reading the project properties file.", io);
         }
