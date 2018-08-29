@@ -4,6 +4,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.util.List;
 import java.util.Map;
 
 public class FileUtil {
@@ -19,6 +21,14 @@ public class FileUtil {
         BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(new File(fileName)));
         for (String key : compositionMap.keySet()) {
             bufferedWriter.write(key + "," + compositionMap.get(key) + "\n");
+        }
+        bufferedWriter.close();
+    }
+
+    public static void writeFileNamesToDisk(List<Path> paths, String fileName) throws IOException {
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(new File(fileName)));
+        for (Path path : paths) {
+            bufferedWriter.write(path.toString() + "\n");
         }
         bufferedWriter.close();
     }

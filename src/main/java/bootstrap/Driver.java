@@ -43,7 +43,8 @@ public class Driver {
             FileUtil.writeMetaDataToDisk(soundMetaData.getLabelledDataset(), projectProperties.getProperty("audio.ml.ground.truth"));
             FileUtil.writeCompDataToDisk(soundMetaData.getClassCompositionGrndTruth(), projectProperties.getProperty
                     ("audio.resources.class.compositionFile"));
-            processAudioFiles(soundMetaData);
+            //processAudioFiles(soundMetaData);
+            FileUtil.writeFileNamesToDisk(soundMetaData.getAllFiles(), projectProperties.getProperty("audio.resources.train.fileList"));
         } catch (IOException io) {
             logger.error("Error while reading the project properties file.", io);
         }
