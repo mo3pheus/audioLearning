@@ -46,4 +46,10 @@ public class FileUtil {
 
         bufferedWriter.close();
     }
+
+    public static void writeContentToDisk(String filename, String content) throws IOException {
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(new File(filename)));
+        bufferedWriter.write(content);
+        bufferedWriter.close();
+    }
 }
