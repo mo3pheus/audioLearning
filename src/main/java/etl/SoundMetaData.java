@@ -116,6 +116,16 @@ public class SoundMetaData {
         }
     }
 
+    public void getOneHotEncodings(String encodedPath, OneHotEncoder oneHotEncoder) throws IOException {
+        for (String inputFile : labelledDataset.keySet()) {
+            String classId = labelledDataset.get(inputFile);
+            String encodedFileName = inputFile.replaceAll(".wav", ".lbl");
+
+            String encodedContent = oneHotEncoder.getEncodedClass(classId);
+            FileUtil.writeContentToDisk(encodedPath + encodedFileName, encodedContent);
+        }
+    }
+
     public String getEncodedFileContent(String filename) throws IOException {
         StringBuilder contentBuilder = new StringBuilder();
         BufferedReader bufferedReader = new BufferedReader(new FileReader(filename));

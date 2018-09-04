@@ -51,8 +51,8 @@ public class Driver {
             logger.info(SEPARATOR);
             OneHotEncoder oneHotEncoder = new OneHotEncoder(soundMetaData.getUniqueLabels());
             for (String classId : soundMetaData.getUniqueLabels()) {
-                //logger.info("ClassId = " + classId + " encoding = " + oneHotEncoder.getEncodedClass(classId));
-                logger.info(oneHotEncoder.getEncodedClass(classId));
+                logger.info("ClassId = " + classId + " encoding = " + oneHotEncoder.getEncodedClass(classId));
+                //logger.info(oneHotEncoder.getEncodedClass(classId));
             }
 
             for (String classId : soundMetaData.getUniqueLabels()) {
@@ -64,6 +64,7 @@ public class Driver {
             logger.info(SEPARATOR);
             logger.info("Generating formatted input.");
             soundMetaData.getFormattedTrainingSet(projectProperties.getProperty("audio.resources.train.encodedInput.path"), oneHotEncoder);
+            soundMetaData.getOneHotEncodings(projectProperties.getProperty("audio.resources.train.labels.path"), oneHotEncoder);
             logger.info("Finished consolidated input");
             logger.info(SEPARATOR);
 

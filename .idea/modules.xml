@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/src/test/java/java.iml" filepath="$PROJECT_DIR$/src/test/java/java.iml" />
       <module fileurl="file://$PROJECT_DIR$/sound.ml.iml" filepath="$PROJECT_DIR$/sound.ml.iml" />
     </modules>
   </component>
