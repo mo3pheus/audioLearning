@@ -2,6 +2,7 @@ package bootstrap;
 
 import etl.OneHotEncoder;
 import etl.SoundMetaData;
+import etl.TrainingDataCenter;
 import org.apache.log4j.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +13,9 @@ import java.io.*;
 import audioProcessing.WavFile;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 
 public class Driver {
@@ -29,7 +33,7 @@ public class Driver {
             logger.info(" Project properties are loaded. Log file generated for this run = " + logFilePath);
             projectProperties = getProjectProperties(args[1]);
 
-            SoundMetaData soundMetaData = new SoundMetaData();
+            /*SoundMetaData soundMetaData = new SoundMetaData();
             soundMetaData.initializeLabelledData(projectProperties.getProperty("audio.resources.path"));
             soundMetaData.getManuallyVerifiedFiles(projectProperties.getProperty("audio.resources.train.metaFile"));
 
@@ -44,7 +48,6 @@ public class Driver {
             FileUtil.writeMetaDataToDisk(soundMetaData.getLabelledDataset(), projectProperties.getProperty("audio.ml.ground.truth"));
             FileUtil.writeCompDataToDisk(soundMetaData.getClassCompositionGrndTruth(), projectProperties.getProperty
                     ("audio.resources.class.compositionFile"));
-            //processAudioFiles(soundMetaData);
             FileUtil.writeFileNamesToDisk(soundMetaData.getAllFiles(), projectProperties.getProperty("audio.resources.train.fileList"));
             FileUtil.writeMappedLabelsToDisk(soundMetaData.getMappedLabels(), projectProperties.getProperty("audio.resources.train.mappedLabelsFile"));
 
@@ -52,11 +55,9 @@ public class Driver {
             OneHotEncoder oneHotEncoder = new OneHotEncoder(soundMetaData.getUniqueLabels());
             for (String classId : soundMetaData.getUniqueLabels()) {
                 logger.info("ClassId = " + classId + " encoding = " + oneHotEncoder.getEncodedClass(classId));
-                //logger.info(oneHotEncoder.getEncodedClass(classId));
             }
 
             for (String classId : soundMetaData.getUniqueLabels()) {
-                //logger.info("ClassId = " + classId + " encoding = " + oneHotEncoder.getEncodedClass(classId));
                 logger.info(oneHotEncoder.getClassIdForEncoding(oneHotEncoder.getEncodedClass(classId)));
             }
             logger.info(SEPARATOR);
@@ -66,7 +67,15 @@ public class Driver {
             soundMetaData.getFormattedTrainingSet(projectProperties.getProperty("audio.resources.train.encodedInput.path"), oneHotEncoder);
             soundMetaData.getOneHotEncodings(projectProperties.getProperty("audio.resources.train.labels.path"), oneHotEncoder);
             logger.info("Finished consolidated input");
-            logger.info(SEPARATOR);
+            logger.info(SEPARATOR); */
+
+            String[] acceptedLabels = {"Meow", "Bark", "Cowbell"};
+            TrainingDataCenter trainingDataCenter = new TrainingDataCenter(Arrays.asList(acceptedLabels), projectProperties.getProperty("audio.resources.train.metaFile"));
+            trainingDataCenter.writeReducedLabelsDataset();
+
+            List<String> acceptedFiles = new ArrayList<>();
+            acceptedFiles.addAll(trainingDataCenter.getAcceptedFiles());
+            FileUtil.writeContentToDisk(projectProperties.getProperty("audio.resources.reduced.metaFile"), acceptedFiles);
 
         } catch (IOException io) {
             logger.error("Error while reading the project properties file.", io);

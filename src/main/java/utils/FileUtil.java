@@ -2,6 +2,7 @@ package utils;
 
 import java.io.*;
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -50,6 +51,30 @@ public class FileUtil {
     public static void writeContentToDisk(String filename, String content) throws IOException {
         BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(new File(filename)));
         bufferedWriter.write(content);
+        bufferedWriter.close();
+    }
+
+    public static Map<String, String> readLabelledData(String filename) throws IOException {
+        Map<String, String> labelledFilesMap = new HashMap<>();
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(filename));
+
+        String dataLine = "";
+        while ((dataLine = bufferedReader.readLine()) != null) {
+            String[] parts = dataLine.split(",");
+            labelledFilesMap.put(parts[0], parts[1]);
+        }
+
+        bufferedReader.close();
+        return labelledFilesMap;
+    }
+
+    public static void writeContentToDisk(String filename, List<String> fileNames) throws IOException {
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(new File(filename)));
+        StringBuilder stringBuilder = new StringBuilder();
+        for (String file : fileNames) {
+            stringBuilder.append(file).append("\n");
+        }
+        bufferedWriter.write(stringBuilder.toString());
         bufferedWriter.close();
     }
 }
