@@ -33,7 +33,7 @@ public class Driver {
             logger.info(" Project properties are loaded. Log file generated for this run = " + logFilePath);
             projectProperties = getProjectProperties(args[1]);
 
-            /*SoundMetaData soundMetaData = new SoundMetaData();
+            SoundMetaData soundMetaData = new SoundMetaData(projectProperties);
             soundMetaData.initializeLabelledData(projectProperties.getProperty("audio.resources.path"));
             soundMetaData.getManuallyVerifiedFiles(projectProperties.getProperty("audio.resources.train.metaFile"));
 
@@ -50,7 +50,9 @@ public class Driver {
                     ("audio.resources.class.compositionFile"));
             FileUtil.writeFileNamesToDisk(soundMetaData.getAllFiles(), projectProperties.getProperty("audio.resources.train.fileList"));
             FileUtil.writeMappedLabelsToDisk(soundMetaData.getMappedLabels(), projectProperties.getProperty("audio.resources.train.mappedLabelsFile"));
+            FileUtil.createSplitTrainingSet(soundMetaData.getMappedLabels(), projectProperties.getProperty("audio.resources.training.splitDataPath"), projectProperties.getProperty("audio.resources.train.etl.commands"));
 
+            /*
             logger.info(SEPARATOR);
             OneHotEncoder oneHotEncoder = new OneHotEncoder(soundMetaData.getUniqueLabels());
             for (String classId : soundMetaData.getUniqueLabels()) {
@@ -67,7 +69,7 @@ public class Driver {
             soundMetaData.getFormattedTrainingSet(projectProperties.getProperty("audio.resources.train.encodedInput.path"), oneHotEncoder);
             soundMetaData.getOneHotEncodings(projectProperties.getProperty("audio.resources.train.labels.path"), oneHotEncoder);
             logger.info("Finished consolidated input");
-            logger.info(SEPARATOR); */
+            logger.info(SEPARATOR);
 
             String[] acceptedLabels = {"Meow", "Bark", "Cowbell"};
             TrainingDataCenter trainingDataCenter = new TrainingDataCenter(Arrays.asList(acceptedLabels), projectProperties.getProperty("audio.resources.train.metaFile"));
@@ -76,6 +78,7 @@ public class Driver {
             List<String> acceptedFiles = new ArrayList<>();
             acceptedFiles.addAll(trainingDataCenter.getAcceptedFiles());
             FileUtil.writeContentToDisk(projectProperties.getProperty("audio.resources.reduced.metaFile"), acceptedFiles);
+            */
 
         } catch (IOException io) {
             logger.error("Error while reading the project properties file.", io);

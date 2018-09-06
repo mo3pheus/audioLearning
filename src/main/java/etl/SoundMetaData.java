@@ -19,6 +19,13 @@ public class SoundMetaData {
     private List<String> manuallyVerifiedFiles = new ArrayList<>();
     private Set<String> manuallyVerifiedClasses = new HashSet<>();
     private Set<String> uniqueLabels = new HashSet<>();
+    private Properties metaProperties = new Properties();
+
+    //private Map<String, List<String>> mappedLabels = new HashMap<>();
+
+    public SoundMetaData(Properties metaProperties) {
+        this.metaProperties = metaProperties;
+    }
 
     public void initializeLabelledData(String audioResourcePath) {
         try {
@@ -46,7 +53,6 @@ public class SoundMetaData {
             while ((dataLine = bufferedReader.readLine()) != null) {
                 String[] parts = dataLine.split(",");
                 for (int i = 0; i < parts.length; i++) {
-                    //System.out.println(" i = " + i + " :: part = " + parts[i]);
                     if (parts[2].equalsIgnoreCase("1")) {
                         labelledDataset.put(parts[0], parts[1]);
                         manuallyVerifiedClasses.add(parts[1]);
