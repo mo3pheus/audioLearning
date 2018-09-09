@@ -160,7 +160,7 @@ public class Driver {
         } else {
             ca.setThreshold(Level.toLevel(Priority.DEBUG_INT));
         }
-        ca.setLayout(new EnhancedPatternLayout("%-6d [%25.35t] %-5p %40.80c - %m%n"));
+        ca.setLayout(new EnhancedPatternLayout("%-6d [%t] %-5p %c - %m%n"));
         ca.activateOptions();
         org.apache.log4j.Logger.getRootLogger().addAppender(ca);
     }
