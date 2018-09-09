@@ -11,14 +11,15 @@ import java.io.IOException;
 import java.util.*;
 
 public class TrainingDataCenter {
-    private static final String DESTINATION_PATH = "/home/sanket/Documents/Data/SoundData/reducedLabelsSet/";
-    private static final String DESTINATION_DIR = "/home/sanket/Documents/Data/SoundData/";
-    private String trainingMetaFile = "";
-    private Set<String> acceptedLabels = new HashSet<>();
-    private Set<String> acceptedFiles = new HashSet<>();
-    private OneHotEncoder oneHotEncoder = null;
-    private Map<String, String> fileLabelMap = new HashMap<>();
-    private Logger logger = LoggerFactory.getLogger(TrainingDataCenter.class);
+    private static final String              DESTINATION_PATH =
+            "/home/sanket/Documents/Data/SoundData/reducedLabelsSet/";
+    private static final String              DESTINATION_DIR  = "/home/sanket/Documents/Data/SoundData/";
+    private              String              trainingMetaFile = "";
+    private              Set<String>         acceptedLabels   = new HashSet<>();
+    private              Set<String>         acceptedFiles    = new HashSet<>();
+    private              OneHotEncoder       oneHotEncoder    = null;
+    private              Map<String, String> fileLabelMap     = new HashMap<>();
+    private              Logger              logger           = LoggerFactory.getLogger(TrainingDataCenter.class);
 
     public TrainingDataCenter(List<String> acceptedLabels, String trainingMetaFile) {
         this.acceptedLabels.addAll(acceptedLabels);
@@ -36,7 +37,8 @@ public class TrainingDataCenter {
             if (acceptedLabels.contains(fileLabelMap.get(key))) {
                 String fileName = key.replace(".wav", ".lbl");
                 try {
-                    FileUtil.writeContentToDisk(DESTINATION_PATH + fileName, oneHotEncoder.getEncodedClass(fileLabelMap.get(key)));
+                    FileUtil.writeContentToDisk(DESTINATION_PATH + fileName,
+                                                oneHotEncoder.getEncodedClass(fileLabelMap.get(key)));
                     acceptedFiles.add(key);
                 } catch (IOException io) {
                     logger.error("Error while writing content to disk, fileName = " + fileName, io);

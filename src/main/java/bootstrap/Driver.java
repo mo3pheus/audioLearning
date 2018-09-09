@@ -6,6 +6,7 @@ import etl.TrainingDataCenter;
 import org.apache.log4j.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import prediction.suite.PredictionSuite;
 import utils.FileUtil;
 
 import java.io.*;
@@ -23,7 +24,7 @@ public class Driver {
             "==============================================================";
 
     public static Properties projectProperties = new Properties();
-    public static Logger logger = LoggerFactory.getLogger(Driver.class);
+    public static Logger     logger            = LoggerFactory.getLogger(Driver.class);
 
     public static void main(String[] args) {
         try {
@@ -45,12 +46,20 @@ public class Driver {
                     .size());
             logger.info(SEPARATOR);
 
-            FileUtil.writeMetaDataToDisk(soundMetaData.getLabelledDataset(), projectProperties.getProperty("audio.ml.ground.truth"));
+            FileUtil.writeMetaDataToDisk(soundMetaData.getLabelledDataset(),
+                                         projectProperties.getProperty("audio.ml.ground.truth"));
             FileUtil.writeCompDataToDisk(soundMetaData.getClassCompositionGrndTruth(), projectProperties.getProperty
                     ("audio.resources.class.compositionFile"));
-            FileUtil.writeFileNamesToDisk(soundMetaData.getAllFiles(), projectProperties.getProperty("audio.resources.train.fileList"));
-            FileUtil.writeMappedLabelsToDisk(soundMetaData.getMappedLabels(), projectProperties.getProperty("audio.resources.train.mappedLabelsFile"));
-            FileUtil.createSplitTrainingSet(soundMetaData.getMappedLabels(), projectProperties.getProperty("audio.resources.training.splitDataPath"), projectProperties.getProperty("audio.resources.train.etl.commands"));
+            FileUtil.writeFileNamesToDisk(soundMetaData.getAllFiles(),
+                                          projectProperties.getProperty("audio.resources.train.fileList"));
+            FileUtil.writeMappedLabelsToDisk(soundMetaData.getMappedLabels(),
+                                             projectProperties.getProperty("audio.resources.train.mappedLabelsFile"));
+            FileUtil.createSplitTrainingSet(soundMetaData.getMappedLabels(),
+                                            projectProperties.getProperty("audio.resources.training.splitDataPath"),
+                                            projectProperties.getProperty("audio.resources.train.etl.commands"));
+
+            PredictionSuite predictionSuite = new PredictionSuite(soundMetaData.getLabelledDataset(),
+                                                                  projectProperties);
 
             /*
             logger.info(SEPARATOR);
@@ -66,18 +75,22 @@ public class Driver {
 
             logger.info(SEPARATOR);
             logger.info("Generating formatted input.");
-            soundMetaData.getFormattedTrainingSet(projectProperties.getProperty("audio.resources.train.encodedInput.path"), oneHotEncoder);
-            soundMetaData.getOneHotEncodings(projectProperties.getProperty("audio.resources.train.labels.path"), oneHotEncoder);
+            soundMetaData.getFormattedTrainingSet(projectProperties.getProperty("audio.resources.train.encodedInput
+            .path"), oneHotEncoder);
+            soundMetaData.getOneHotEncodings(projectProperties.getProperty("audio.resources.train.labels.path"),
+            oneHotEncoder);
             logger.info("Finished consolidated input");
             logger.info(SEPARATOR);
 
             String[] acceptedLabels = {"Meow", "Bark", "Cowbell"};
-            TrainingDataCenter trainingDataCenter = new TrainingDataCenter(Arrays.asList(acceptedLabels), projectProperties.getProperty("audio.resources.train.metaFile"));
+            TrainingDataCenter trainingDataCenter = new TrainingDataCenter(Arrays.asList(acceptedLabels),
+            projectProperties.getProperty("audio.resources.train.metaFile"));
             trainingDataCenter.writeReducedLabelsDataset();
 
             List<String> acceptedFiles = new ArrayList<>();
             acceptedFiles.addAll(trainingDataCenter.getAcceptedFiles());
-            FileUtil.writeContentToDisk(projectProperties.getProperty("audio.resources.reduced.metaFile"), acceptedFiles);
+            FileUtil.writeContentToDisk(projectProperties.getProperty("audio.resources.reduced.metaFile"),
+            acceptedFiles);
             */
 
         } catch (IOException io) {
@@ -105,7 +118,7 @@ public class Driver {
             // Create a buffer of 100 frames
             double[] buffer = new double[100 * numChannels];
 
-            int framesRead;
+            int    framesRead;
             double min = Double.MAX_VALUE;
             double max = Double.MIN_VALUE;
 
@@ -167,8 +180,8 @@ public class Driver {
 
     public static Properties getProjectProperties(String propertiesFilePath) throws IOException {
         logger.info("Properties file specified at location = " + propertiesFilePath);
-        FileInputStream projFile = new FileInputStream(propertiesFilePath);
-        Properties properties = new Properties();
+        FileInputStream projFile   = new FileInputStream(propertiesFilePath);
+        Properties      properties = new Properties();
         properties.load(projFile);
         return properties;
     }

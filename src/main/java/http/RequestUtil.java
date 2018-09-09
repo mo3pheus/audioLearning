@@ -12,11 +12,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -30,8 +26,9 @@ import java.util.concurrent.TimeUnit;
 public class RequestUtil {
 
     public static RequestConfig createRequestConfig() {
-        RequestConfig requestConfig = RequestConfig.custom().setConnectionRequestTimeout((int) TimeUnit.SECONDS
-                .toMillis(60)).setConnectTimeout((int) TimeUnit.SECONDS.toMillis(120)).setSocketTimeout((int) TimeUnit.MINUTES.toMillis(3l))
+        RequestConfig requestConfig = RequestConfig.custom().setConnectionRequestTimeout((int) TimeUnit.MINUTES
+                .toMillis(5)).setConnectTimeout((int) TimeUnit.SECONDS.toMillis(1200))
+                .setSocketTimeout((int) TimeUnit.MINUTES.toMillis(10l))
                 .build();
         return requestConfig;
     }
@@ -84,11 +81,12 @@ public class RequestUtil {
         return sb.toString();
     }
 
-    public static HttpPost createHttpPost(String audioFile, Properties httpProperties) throws IOException {
-        byte[] content       = Files.readAllBytes(Paths.get(audioFile));
-        String contentString = Base64.encode(content);
+    public static HttpPost createHttpPost(String audioFile, CloudAccessToken cloudAccessToken, Properties
+            httpProperties) throws IOException {
+        String audioSourcePrefix = httpProperties.getProperty("audio.resources.path") + "/";
+        byte[] content           = Files.readAllBytes(Paths.get(audioSourcePrefix + audioFile));
+        String contentString     = Base64.encode(content);
 
-        CloudAccessToken cloudAccessToken = RequestUtil.getAccessToken(httpProperties);
         String url = httpProperties.getProperty("audio.cloud.classification" +
                                                         ".endpoint") +
                 "?access_token=" + cloudAccessToken.getAccessToken();

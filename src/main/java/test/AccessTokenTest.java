@@ -1,9 +1,10 @@
 package test;
 
 import bootstrap.Driver;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import domain.CloudResponseObject;
 import http.CloudAccessToken;
 import http.RequestUtil;
-import http.SoundJsonPayload;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -14,8 +15,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Properties;
-
-import static http.RequestUtil.convertStreamToString;
 
 public class AccessTokenTest {
     static Logger logger = LoggerFactory.getLogger(AccessTokenTest.class);
@@ -29,19 +28,33 @@ public class AccessTokenTest {
         logger.info("Valid Seconds = " + cloudAccessToken.getValidSeconds());
         logger.info("Is valid = " + cloudAccessToken.isValid());
 
-        SoundJsonPayload soundJsonPayload = new SoundJsonPayload("temp", "something");
-        logger.info((new JSONObject(soundJsonPayload)).toString());
-
-        String   testClarinetSoundFile = "/home/sanket/Documents/Data/SoundData/audio_train/b753a444.wav";
-        HttpPost httpPost              = RequestUtil.createHttpPost(testClarinetSoundFile, applicationProperties);
+        String   soundFile = getParam(args, "--soundFile");
+        HttpPost httpPost  = RequestUtil.createHttpPost(soundFile, cloudAccessToken, applicationProperties);
 
         logger.info("HttpPost:: " + httpPost);
 
         CloseableHttpClient httpClient = HttpClientBuilder.create().setMaxConnPerRoute(1).setMaxConnTotal(1)
                 .setDefaultRequestConfig(RequestUtil.createRequestConfig()).build();
         CloseableHttpResponse response = httpClient.execute(httpPost);
-        JSONObject jsonObject = new JSONObject(convertStreamToString(response.getEntity().getContent
+        JSONObject jsonObject = new JSONObject(RequestUtil.convertStreamToString(response.getEntity().getContent
                 ()));
+        response.close();
+        httpClient.close();
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        CloudResponseObject cloudResponseObject = objectMapper
+                .readValue(jsonObject.toString(), CloudResponseObject.class);
+
+        logger.info("mapped Object logId = " + cloudResponseObject.getLog_id());
         logger.info(jsonObject.toString());
+    }
+
+    static String getParam(String[] args, String param) {
+        for (int i = 0; i < args.length; i++) {
+            if (args[i].equals(param)) {
+                return args[i + 1];
+            }
+        }
+        return null;
     }
 }

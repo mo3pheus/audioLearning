@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Set;
 
 public class OneHotEncoder {
-    private Set<String> classes = new HashSet<>();
     List<String> classesList = new ArrayList<>();
+    private Set<String> classes = new HashSet<>();
 
     public OneHotEncoder(Set<String> classes) {
         this.classes = classes;

@@ -3,9 +3,9 @@ package http;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
 
-import java.io.IOException;
+import java.util.concurrent.Callable;
 
-public class RequestTask {
+public class RequestTask implements Callable<AudioLabelResponse> {
     private AudioLabelResponse  audioLabelResponse = null;
     private CloseableHttpClient httpClient         = null;
     private HttpPost            httpPost           = null;
@@ -20,7 +20,10 @@ public class RequestTask {
         audioLabelResponse = new AudioLabelResponse();
     }
 
-    public AudioLabelResponse getAudioLabelResponse() throws IOException {
+    @Override
+    public AudioLabelResponse call() throws Exception {
+        Thread.currentThread().setName("requestTask_" + fileName);
+        audioLabelResponse.setFileName(fileName);
         audioLabelResponse.setHttpResponse(httpClient.execute(httpPost));
         audioLabelResponse.setActualLabel(acutalLabel);
         return audioLabelResponse;
