@@ -12,12 +12,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class AudioLabelResponse {
-    private CloseableHttpResponse httpResponse       = null;
-    private String                fileName           = "";
-    private String                actualLabel        = null;
-    private Map<String, Double>   classProbabilities = new HashMap<>();
-    private Long                  logId              = null;
-    private String                predictedClass     = null;
+    private CloseableHttpResponse httpResponse = null;
+    private String fileName = "";
+    private String actualLabel = null;
+    private Map<String, Double> classProbabilities = new HashMap<>();
+    private Long logId = null;
+    private String predictedClass = null;
 
     public CloseableHttpResponse getHttpResponse() {
         return httpResponse;
@@ -34,7 +34,7 @@ public class AudioLabelResponse {
         double maxProbability = Double.MIN_VALUE;
         for (ResultsTuple resultsTuple : cloudResponseObject.getResults()) {
             classProbabilities.put(resultsTuple.getName(), resultsTuple.getScore());
-            if (resultsTuple.getScore() > maxProbability) {
+            if ( resultsTuple.getScore() > maxProbability ) {
                 maxProbability = resultsTuple.getScore();
                 predictedClass = resultsTuple.getName();
             }

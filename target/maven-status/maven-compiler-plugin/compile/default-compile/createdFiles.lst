@@ -10,10 +10,13 @@ http/RequestUtil.class
 prediction/suite/PredictionSuite.class
 http/SoundJsonPayload.class
 http/RequestTask.class
+etl/DataPreProcessor.class
 bootstrap/Driver.class
 domain/ResultsTuple.class
 etl/OneHotEncoderTest.class
+test/DataSplitUtilTest.class
 http/AudioLabelResponse.class
+etl/DataSplitUtility.class
 audioProcessing/ReadExample.class
 audioProcessing/WavFileException.class
 etl/TrainingDataCenter.class

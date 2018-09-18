@@ -1,6 +1,6 @@
 package audioProcessing;
 
-import java.io.*;
+import java.io.File;
 
 public class ReadExample {
     public static void main(String[] args) {
@@ -17,7 +17,7 @@ public class ReadExample {
             // Create a buffer of 100 frames
             double[] buffer = new double[100 * numChannels];
 
-            int    framesRead;
+            int framesRead;
             double min = Double.MAX_VALUE;
             double max = Double.MIN_VALUE;
 
@@ -27,15 +27,15 @@ public class ReadExample {
 
                 // Loop through frames and look for minimum and maximum value
                 for (int s = 0; s < framesRead * numChannels; s++) {
-                    if (buffer[s] > max) {
+                    if ( buffer[s] > max ) {
                         max = buffer[s];
                     }
-                    if (buffer[s] < min) {
+                    if ( buffer[s] < min ) {
                         min = buffer[s];
                     }
                 }
             }
-            while (framesRead != 0);
+            while ( framesRead != 0 );
 
             // Close the wavFile
             wavFile.close();

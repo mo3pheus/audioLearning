@@ -20,19 +20,19 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 public class PredictionSuite {
-    public static final int                              MAX_TESTFILES         = 400;
-    private volatile    CloseableHttpClient              httpClient            = null;
-    private             Logger                           logger                = LoggerFactory
+    public static final int MAX_TESTFILES = 400;
+    private volatile CloseableHttpClient httpClient = null;
+    private Logger logger = LoggerFactory
             .getLogger(PredictionSuite.class);
-    private             Map<String, String>              labelledTestSet       = new HashMap<>();
-    private             Properties                       applicationProperties = null;
-    private             CloudAccessToken                 accessToken           = null;
-    private             List<AudioLabelResponse>         testResults           = new ArrayList<>();
-    private             List<Future<AudioLabelResponse>> responseFutures       = new ArrayList<>();
-    private             List<RequestTask>                taskList              = new ArrayList<>();
-    private             ExecutorService                  executorService       = null;
-    private             Set<String>                      validLabels           = new HashSet<>();
-    private             Map<String, HttpPost>            postMap               = new HashMap<>();
+    private Map<String, String> labelledTestSet = new HashMap<>();
+    private Properties applicationProperties = null;
+    private CloudAccessToken accessToken = null;
+    private List<AudioLabelResponse> testResults = new ArrayList<>();
+    private List<Future<AudioLabelResponse>> responseFutures = new ArrayList<>();
+    private List<RequestTask> taskList = new ArrayList<>();
+    private ExecutorService executorService = null;
+    private Set<String> validLabels = new HashSet<>();
+    private Map<String, HttpPost> postMap = new HashMap<>();
 
     public PredictionSuite(Map<String, String> labelledTestSet, Properties applicationProperties) {
         this.applicationProperties = applicationProperties;
@@ -60,9 +60,9 @@ public class PredictionSuite {
         int validCount = 0;
         for (String fileName : testSet.keySet()) {
             String label = testSet.get(fileName);
-            if (validLabels.contains(label)) {
+            if ( validLabels.contains(label) ) {
                 labelledTestSet.put(fileName, label);
-                if (++validCount > MAX_TESTFILES) {
+                if ( ++validCount > MAX_TESTFILES ) {
                     break;
                 }
             }
@@ -82,8 +82,8 @@ public class PredictionSuite {
     private void prepareTaskList() {
         for (String fileName : labelledTestSet.keySet()) {
 
-            String   actualLabel = labelledTestSet.get(fileName);
-            HttpPost httpPost    = null;
+            String actualLabel = labelledTestSet.get(fileName);
+            HttpPost httpPost = null;
             try {
                 httpPost = RequestUtil.createHttpPost(fileName, accessToken, applicationProperties);
                 postMap.put(fileName, httpPost);
@@ -130,7 +130,7 @@ public class PredictionSuite {
         double totalResultSize = testResults.size();
         double accurateResults = 0.0d;
         for (AudioLabelResponse response : testResults) {
-            if (response.getActualLabel().equals(response.getPredictedClass())) {
+            if ( response.getActualLabel().equals(response.getPredictedClass()) ) {
                 accurateResults++;
                 logger.info("Filename = " + response.getFileName() + " classified correctly as " + response
                         .getPredictedClass());

@@ -1,15 +1,11 @@
 package http;
 
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
-import org.apache.http.Header;
-import org.apache.http.HeaderElement;
 import org.apache.http.HttpHeaders;
-import org.apache.http.ParseException;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.json.JSONObject;
@@ -34,10 +30,10 @@ public class RequestUtil {
     }
 
     public static CloudAccessToken getAccessToken(Properties httpProperties) throws IOException {
-        String endPoint     = httpProperties.getProperty("audio.cloud.access.token.endpoint");
-        String clientId     = httpProperties.getProperty("audio.cloud.client.id");
+        String endPoint = httpProperties.getProperty("audio.cloud.access.token.endpoint");
+        String clientId = httpProperties.getProperty("audio.cloud.client.id");
         String clientSecret = httpProperties.getProperty("audio.cloud.client.secret");
-        String grantType    = httpProperties.getProperty("audio.cloud.grant.type");
+        String grantType = httpProperties.getProperty("audio.cloud.grant.type");
 
         RequestConfig requestConfig = createRequestConfig();
         CloseableHttpClient closeableHttpClient = HttpClientBuilder.create().setMaxConnPerRoute(1).setMaxConnTotal(1)
@@ -62,11 +58,11 @@ public class RequestUtil {
     public static String convertStreamToString(InputStream is) {
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-        StringBuilder  sb     = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
 
         String line = null;
         try {
-            while ((line = reader.readLine()) != null) {
+            while ( (line = reader.readLine()) != null ) {
                 sb.append(line + "\n");
             }
         } catch (IOException e) {
@@ -84,17 +80,17 @@ public class RequestUtil {
     public static HttpPost createHttpPost(String audioFile, CloudAccessToken cloudAccessToken, Properties
             httpProperties) throws IOException {
         String audioSourcePrefix = httpProperties.getProperty("audio.resources.path") + "/";
-        byte[] content           = Files.readAllBytes(Paths.get(audioSourcePrefix + audioFile));
-        String contentString     = Base64.encode(content);
+        byte[] content = Files.readAllBytes(Paths.get(audioSourcePrefix + audioFile));
+        String contentString = Base64.encode(content);
 
         String url = httpProperties.getProperty("audio.cloud.classification" +
-                                                        ".endpoint") +
+                ".endpoint") +
                 "?access_token=" + cloudAccessToken.getAccessToken();
 
         HttpPost httpPost = new HttpPost(url);
         httpPost.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
 
-        JSONObject   payload       = new JSONObject(new SoundJsonPayload(contentString, "6"));
+        JSONObject payload = new JSONObject(new SoundJsonPayload(contentString, "6"));
         StringEntity payloadEntity = new StringEntity(payload.toString());
         httpPost.setEntity(payloadEntity);
 

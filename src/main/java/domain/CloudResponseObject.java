@@ -1,7 +1,7 @@
 package domain;
 
 public class CloudResponseObject {
-    private double         log_id;
+    private double log_id;
     private ResultsTuple[] results;
 
     public double getLog_id() {

@@ -15,7 +15,7 @@ public class OneHotEncoder {
     }
 
     public String getEncodedClass(String classId) throws IllegalArgumentException {
-        if (!classes.contains(classId)) {
+        if ( !classes.contains(classId) ) {
             throw new IllegalArgumentException("ClassId passed in was not part of the initial constructor. " + classId);
         }
 
@@ -23,14 +23,14 @@ public class OneHotEncoder {
 
         String encodedString = "[ ";
         for (int i = 0; i < classes.size(); i++) {
-            if (i == index) {
-                if (i == (classes.size() - 1)) {
+            if ( i == index ) {
+                if ( i == (classes.size() - 1) ) {
                     encodedString += " 1";
                 } else {
                     encodedString += " 1,";
                 }
             } else {
-                if (i == (classes.size() - 1)) {
+                if ( i == (classes.size() - 1) ) {
                     encodedString += " 0";
                 } else {
                     encodedString += " 0,";
@@ -44,7 +44,7 @@ public class OneHotEncoder {
     private int findClassIndex(String classId) {
         for (int i = 0; i < classesList.size(); i++) {
             String currentClass = classesList.get(i);
-            if (currentClass.equals(classId)) {
+            if ( currentClass.equals(classId) ) {
                 return i;
             }
         }
@@ -54,7 +54,7 @@ public class OneHotEncoder {
 
     public String getClassIdForEncoding(String encoding) {
         for (int i = 0; i < classesList.size(); i++) {
-            if (getEncodedClass(classesList.get(i)).equals(encoding)) {
+            if ( getEncodedClass(classesList.get(i)).equals(encoding) ) {
                 return classesList.get(i);
             }
         }

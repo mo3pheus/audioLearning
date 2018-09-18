@@ -1,7 +1,7 @@
 package http;
 
 public class SoundJsonPayload {
-    private String sound   = null;
+    private String sound = null;
     private String top_num = null;
 
     public SoundJsonPayload(String sound, String topNum) {

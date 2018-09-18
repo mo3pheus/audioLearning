@@ -1,12 +1,12 @@
 package audioProcessing;
 
-import java.io.*;
+import java.io.File;
 
 public class WriteExample {
     public static void main(String[] args) {
         try {
-            int    sampleRate = 44100;        // Samples per second
-            double duration   = 5.0;        // Seconds
+            int sampleRate = 44100;        // Samples per second
+            double duration = 5.0;        // Seconds
 
             // Calculate the number of frames required for specified duration
             long numFrames = (long) (duration * sampleRate);
@@ -21,10 +21,10 @@ public class WriteExample {
             long frameCounter = 0;
 
             // Loop until all frames written
-            while (frameCounter < numFrames) {
+            while ( frameCounter < numFrames ) {
                 // Determine how many frames to write, up to a maximum of the buffer size
                 long remaining = wavFile.getFramesRemaining();
-                int  toWrite   = (remaining > 100) ? 100 : (int) remaining;
+                int toWrite = (remaining > 100) ? 100 : (int) remaining;
 
                 // Fill the buffer, one tone per channel
                 for (int s = 0; s < toWrite; s++, frameCounter++) {

@@ -9,7 +9,7 @@
         <module name="sound.ml" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
+    <bytecodeTargetLevel target="8">
       <module name="sound.ml" target="1.8" />
     </bytecodeTargetLevel>
   </component>

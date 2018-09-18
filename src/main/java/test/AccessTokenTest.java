@@ -22,14 +22,14 @@ public class AccessTokenTest {
     public static void main(String[] args) throws IOException {
         logger.info("Test getting accessToken.");
         Driver.configureConsoleLogging(false);
-        Properties       applicationProperties = Driver.getProjectProperties("src/main/resources/project.properties");
-        CloudAccessToken cloudAccessToken      = RequestUtil.getAccessToken(applicationProperties);
+        Properties applicationProperties = Driver.getProjectProperties("src/main/resources/project.properties");
+        CloudAccessToken cloudAccessToken = RequestUtil.getAccessToken(applicationProperties);
         logger.info("Access Token = " + cloudAccessToken.getAccessToken());
         logger.info("Valid Seconds = " + cloudAccessToken.getValidSeconds());
         logger.info("Is valid = " + cloudAccessToken.isValid());
 
-        String   soundFile = getParam(args, "--soundFile");
-        HttpPost httpPost  = RequestUtil.createHttpPost(soundFile, cloudAccessToken, applicationProperties);
+        String soundFile = getParam(args, "--soundFile");
+        HttpPost httpPost = RequestUtil.createHttpPost(soundFile, cloudAccessToken, applicationProperties);
 
         logger.info("HttpPost:: " + httpPost);
 
@@ -51,7 +51,7 @@ public class AccessTokenTest {
 
     static String getParam(String[] args, String param) {
         for (int i = 0; i < args.length; i++) {
-            if (args[i].equals(param)) {
+            if ( args[i].equals(param) ) {
                 return args[i + 1];
             }
         }

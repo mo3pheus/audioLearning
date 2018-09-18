@@ -4,7 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.FileUtil;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -12,14 +14,14 @@ import java.util.*;
 
 public class SoundMetaData {
 
-    private Map<String, String>       labelledDataset         = new HashMap<>();
-    private Map<String, List<String>> mappedLabels            = new HashMap<>();
-    private Logger                    logger                  = LoggerFactory.getLogger(SoundMetaData.class);
-    private List<Path>                allFiles                = new ArrayList<>();
-    private List<String>              manuallyVerifiedFiles   = new ArrayList<>();
-    private Set<String>               manuallyVerifiedClasses = new HashSet<>();
-    private Set<String>               uniqueLabels            = new HashSet<>();
-    private Properties                metaProperties          = new Properties();
+    private Map<String, String> labelledDataset = new HashMap<>();
+    private Map<String, List<String>> mappedLabels = new HashMap<>();
+    private Logger logger = LoggerFactory.getLogger(SoundMetaData.class);
+    private List<Path> allFiles = new ArrayList<>();
+    private List<String> manuallyVerifiedFiles = new ArrayList<>();
+    private Set<String> manuallyVerifiedClasses = new HashSet<>();
+    private Set<String> uniqueLabels = new HashSet<>();
+    private Properties metaProperties = new Properties();
 
     //private Map<String, List<String>> mappedLabels = new HashMap<>();
 
@@ -47,13 +49,13 @@ public class SoundMetaData {
 
     public List<String> getManuallyVerifiedFiles(String metaDataFile) {
         try {
-            String         dataLine       = "";
+            String dataLine = "";
             BufferedReader bufferedReader = new BufferedReader(new FileReader(metaDataFile));
 
-            while ((dataLine = bufferedReader.readLine()) != null) {
+            while ( (dataLine = bufferedReader.readLine()) != null ) {
                 String[] parts = dataLine.split(",");
                 for (int i = 0; i < parts.length; i++) {
-                    if (parts[2].equalsIgnoreCase("1")) {
+                    if ( parts[2].equalsIgnoreCase("1") ) {
                         labelledDataset.put(parts[0], parts[1]);
                         manuallyVerifiedClasses.add(parts[1]);
                         uniqueLabels.add(parts[1]);
@@ -82,7 +84,7 @@ public class SoundMetaData {
 
         for (String key : labelledDataset.keySet()) {
             String clasz = labelledDataset.get(key);
-            if (classComposition.containsKey(clasz)) {
+            if ( classComposition.containsKey(clasz) ) {
                 int count = classComposition.get(clasz);
                 classComposition.put(clasz, ++count);
                 List<String> temp = mappedLabels.get(clasz);
@@ -113,7 +115,7 @@ public class SoundMetaData {
 
     public void getFormattedTrainingSet(String encodedPath, OneHotEncoder oneHotEncoder) throws IOException {
         for (String inputFile : labelledDataset.keySet()) {
-            String classId         = labelledDataset.get(inputFile);
+            String classId = labelledDataset.get(inputFile);
             String encodedFileName = inputFile.replaceAll(".wav", ".enc");
 
             String encodedContent = getEncodedFileContent(encodedPath + "/" + encodedFileName);
@@ -124,7 +126,7 @@ public class SoundMetaData {
 
     public void getOneHotEncodings(String encodedPath, OneHotEncoder oneHotEncoder) throws IOException {
         for (String inputFile : labelledDataset.keySet()) {
-            String classId         = labelledDataset.get(inputFile);
+            String classId = labelledDataset.get(inputFile);
             String encodedFileName = inputFile.replaceAll(".wav", ".lbl");
 
             String encodedContent = oneHotEncoder.getEncodedClass(classId);
@@ -133,10 +135,10 @@ public class SoundMetaData {
     }
 
     public String getEncodedFileContent(String filename) throws IOException {
-        StringBuilder  contentBuilder = new StringBuilder();
+        StringBuilder contentBuilder = new StringBuilder();
         BufferedReader bufferedReader = new BufferedReader(new FileReader(filename));
-        String         dataline       = "";
-        while ((dataline = bufferedReader.readLine()) != null) {
+        String dataline = "";
+        while ( (dataline = bufferedReader.readLine()) != null ) {
             contentBuilder.append(dataline).append("\n");
         }
         bufferedReader.close();

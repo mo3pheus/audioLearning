@@ -5,9 +5,9 @@ import org.joda.time.DateTime;
 import java.util.concurrent.TimeUnit;
 
 public class CloudAccessToken {
-    String   accessToken  = "";
+    String accessToken = "";
     DateTime creationTime = new DateTime(System.currentTimeMillis());
-    int      validSeconds = 0;
+    int validSeconds = 0;
 
     public String getAccessToken() {
         return accessToken;

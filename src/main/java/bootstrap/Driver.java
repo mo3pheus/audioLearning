@@ -1,22 +1,16 @@
 package bootstrap;
 
-import etl.OneHotEncoder;
+import audioProcessing.WavFile;
+import etl.DataPreProcessor;
 import etl.SoundMetaData;
-import etl.TrainingDataCenter;
 import org.apache.log4j.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import prediction.suite.PredictionSuite;
-import utils.FileUtil;
 
-import java.io.*;
-
-import audioProcessing.WavFile;
-
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Properties;
 
 public class Driver {
@@ -33,66 +27,64 @@ public class Driver {
             logger.info(SEPARATOR);
             logger.info(" Project properties are loaded. Log file generated for this run = " + logFilePath);
             projectProperties = getProjectProperties(args[1]);
+//
+//            SoundMetaData soundMetaData = new SoundMetaData(projectProperties);
+//            soundMetaData.initializeLabelledData(projectProperties.getProperty("audio.resources.path"));
+//            soundMetaData.getManuallyVerifiedFiles(projectProperties.getProperty("audio.resources.train.metaFile"));
+//
+//            logger.info(SEPARATOR);
+//            for (String uniqueClass : soundMetaData.getManuallyVerifiedClasses()) {
+//                logger.info(uniqueClass);
+//            }
+//            logger.info("Total number of manually verified classes = " + soundMetaData.getManuallyVerifiedClasses()
+//                    .size());
+//            logger.info(SEPARATOR);
+//
+//            FileUtil.writeMetaDataToDisk(soundMetaData.getLabelledDataset(),
+//                    projectProperties.getProperty("audio.ml.ground.truth"));
+//            FileUtil.writeCompDataToDisk(soundMetaData.getClassCompositionGrndTruth(), projectProperties.getProperty
+//                    ("audio.resources.class.compositionFile"));
+//            FileUtil.writeFileNamesToDisk(soundMetaData.getAllFiles(),
+//                    projectProperties.getProperty("audio.resources.train.fileList"));
+//            FileUtil.writeMappedLabelsToDisk(soundMetaData.getMappedLabels(),
+//                    projectProperties.getProperty("audio.resources.train.mappedLabelsFile"));
+//            FileUtil.createSplitTrainingSet(soundMetaData.getMappedLabels(),
+//                    projectProperties.getProperty("audio.resources.training.splitDataPath"),
+//                    projectProperties.getProperty("audio.resources.train.etl.commands"));
+//
+////            PredictionSuite predictionSuite = new PredictionSuite(soundMetaData.getLabelledDataset(),
+////                                                                  projectProperties);
+//
+//            logger.info(SEPARATOR);
+//            OneHotEncoder oneHotEncoder = new OneHotEncoder(soundMetaData.getUniqueLabels());
+//            for (String classId : soundMetaData.getUniqueLabels()) {
+//                logger.info("ClassId = " + classId + " encoding = " + oneHotEncoder.getEncodedClass(classId));
+//            }
+//
+//            for (String classId : soundMetaData.getUniqueLabels()) {
+//                logger.info(oneHotEncoder.getClassIdForEncoding(oneHotEncoder.getEncodedClass(classId)));
+//            }
+//            logger.info(SEPARATOR);
+//
+//            logger.info(SEPARATOR);
+//            logger.info("Generating formatted input.");
+//            soundMetaData.getFormattedTrainingSet(projectProperties.getProperty("audio.resources.train.encodedInput.path"), oneHotEncoder);
+//            soundMetaData.getOneHotEncodings(projectProperties.getProperty("audio.resources.train.labels.path"),
+//                    oneHotEncoder);
+//            logger.info("Finished consolidated input");
+//            logger.info(SEPARATOR);
+//
+//            String[] acceptedLabels = {"Meow", "Bark", "Cowbell"};
+//            TrainingDataCenter trainingDataCenter = new TrainingDataCenter(Arrays.asList(acceptedLabels),
+//                    projectProperties.getProperty("audio.resources.train.metaFile"));
+//            trainingDataCenter.writeReducedLabelsDataset();
+//
+//            List<String> acceptedFiles = new ArrayList<>();
+//            acceptedFiles.addAll(trainingDataCenter.getAcceptedFiles());
+//            FileUtil.writeContentToDisk(projectProperties.getProperty("audio.resources.reduced.metaFile"),
+//                    acceptedFiles);
 
-            SoundMetaData soundMetaData = new SoundMetaData(projectProperties);
-            soundMetaData.initializeLabelledData(projectProperties.getProperty("audio.resources.path"));
-            soundMetaData.getManuallyVerifiedFiles(projectProperties.getProperty("audio.resources.train.metaFile"));
-
-            logger.info(SEPARATOR);
-            for (String uniqueClass : soundMetaData.getManuallyVerifiedClasses()) {
-                logger.info(uniqueClass);
-            }
-            logger.info("Total number of manually verified classes = " + soundMetaData.getManuallyVerifiedClasses()
-                    .size());
-            logger.info(SEPARATOR);
-
-            FileUtil.writeMetaDataToDisk(soundMetaData.getLabelledDataset(),
-                                         projectProperties.getProperty("audio.ml.ground.truth"));
-            FileUtil.writeCompDataToDisk(soundMetaData.getClassCompositionGrndTruth(), projectProperties.getProperty
-                    ("audio.resources.class.compositionFile"));
-            FileUtil.writeFileNamesToDisk(soundMetaData.getAllFiles(),
-                                          projectProperties.getProperty("audio.resources.train.fileList"));
-            FileUtil.writeMappedLabelsToDisk(soundMetaData.getMappedLabels(),
-                                             projectProperties.getProperty("audio.resources.train.mappedLabelsFile"));
-            FileUtil.createSplitTrainingSet(soundMetaData.getMappedLabels(),
-                                            projectProperties.getProperty("audio.resources.training.splitDataPath"),
-                                            projectProperties.getProperty("audio.resources.train.etl.commands"));
-
-            PredictionSuite predictionSuite = new PredictionSuite(soundMetaData.getLabelledDataset(),
-                                                                  projectProperties);
-
-            /*
-            logger.info(SEPARATOR);
-            OneHotEncoder oneHotEncoder = new OneHotEncoder(soundMetaData.getUniqueLabels());
-            for (String classId : soundMetaData.getUniqueLabels()) {
-                logger.info("ClassId = " + classId + " encoding = " + oneHotEncoder.getEncodedClass(classId));
-            }
-
-            for (String classId : soundMetaData.getUniqueLabels()) {
-                logger.info(oneHotEncoder.getClassIdForEncoding(oneHotEncoder.getEncodedClass(classId)));
-            }
-            logger.info(SEPARATOR);
-
-            logger.info(SEPARATOR);
-            logger.info("Generating formatted input.");
-            soundMetaData.getFormattedTrainingSet(projectProperties.getProperty("audio.resources.train.encodedInput
-            .path"), oneHotEncoder);
-            soundMetaData.getOneHotEncodings(projectProperties.getProperty("audio.resources.train.labels.path"),
-            oneHotEncoder);
-            logger.info("Finished consolidated input");
-            logger.info(SEPARATOR);
-
-            String[] acceptedLabels = {"Meow", "Bark", "Cowbell"};
-            TrainingDataCenter trainingDataCenter = new TrainingDataCenter(Arrays.asList(acceptedLabels),
-            projectProperties.getProperty("audio.resources.train.metaFile"));
-            trainingDataCenter.writeReducedLabelsDataset();
-
-            List<String> acceptedFiles = new ArrayList<>();
-            acceptedFiles.addAll(trainingDataCenter.getAcceptedFiles());
-            FileUtil.writeContentToDisk(projectProperties.getProperty("audio.resources.reduced.metaFile"),
-            acceptedFiles);
-            */
-
+            DataPreProcessor dataPreProcessor = new DataPreProcessor(projectProperties);
         } catch (IOException io) {
             logger.error("Error while reading the project properties file.", io);
         }
@@ -128,15 +120,15 @@ public class Driver {
 
                 // Loop through frames and look for minimum and maximum value
                 for (int s = 0; s < framesRead * numChannels; s++) {
-                    if (buffer[s] > max) {
+                    if ( buffer[s] > max ) {
                         max = buffer[s];
                     }
-                    if (buffer[s] < min) {
+                    if ( buffer[s] < min ) {
                         min = buffer[s];
                     }
                 }
             }
-            while (framesRead != 0);
+            while ( framesRead != 0 );
 
             // Close the wavFile
             wavFile.close();
@@ -151,7 +143,7 @@ public class Driver {
     public static String configureLogging(boolean debug) {
         FileAppender fa = new FileAppender();
 
-        if (!debug) {
+        if ( !debug ) {
             fa.setThreshold(Level.toLevel(Priority.INFO_INT));
             fa.setFile("executionLogs/log_infoLevel_report_" + Long.toString(System.currentTimeMillis()) + ".log");
         } else {
@@ -168,7 +160,7 @@ public class Driver {
 
     public static void configureConsoleLogging(boolean debug) {
         ConsoleAppender ca = new ConsoleAppender();
-        if (!debug) {
+        if ( !debug ) {
             ca.setThreshold(Level.toLevel(Priority.INFO_INT));
         } else {
             ca.setThreshold(Level.toLevel(Priority.DEBUG_INT));
