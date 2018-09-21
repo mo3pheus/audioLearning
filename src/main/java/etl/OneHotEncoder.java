@@ -1,15 +1,12 @@
 package etl;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class OneHotEncoder {
     List<String> classesList = new ArrayList<>();
-    private Set<String> classes = new HashSet<>();
+    private LinkedHashSet<String> classes = new LinkedHashSet<>();
 
-    public OneHotEncoder(Set<String> classes) {
+    public OneHotEncoder(LinkedHashSet<String> classes) {
         this.classes = classes;
         classesList.addAll(classes);
     }

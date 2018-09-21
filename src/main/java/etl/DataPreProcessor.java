@@ -13,24 +13,24 @@ public class DataPreProcessor {
     public static final String  ACCEPTED_LABELS_PROPERTY               = "audio.resources.train.acceptedLabels.list";
     public static final String  AUDIO_TRAIN_SPLIT_PATH_PROPERTY        = "audio.resources.train.split.path";
     public static final String  AUDIO_TEST_SPLIT_PATH_PROPERTY         = "audio.resources.test.split.path";
-    public static final String  AUDIO_TEST_SPLIT_PATH_LABELS_PROPERTY  = "audio.resources.train.split.labelsPath";
-    public static final String  AUDIO_TRAIN_SPLIT_PATH_LABELS_PROPERTY = "audio.resources.test.split.labelsPath";
+    public static final String  AUDIO_TEST_SPLIT_PATH_LABELS_PROPERTY  = "audio.resources.test.split.labelsPath";
+    public static final String  AUDIO_TRAIN_SPLIT_PATH_LABELS_PROPERTY = "audio.resources.train.split.labelsPath";
 
-    Properties       processConfiguration = new Properties();
-    Set<String>      superset             = new HashSet<>();
-    Set<String>      acceptedLabels       = new HashSet<>();
-    Logger           logger               = LoggerFactory.getLogger(DataPreProcessor.class);
-    DataSplitUtility dataSplitUtility     = null;
-    String           dataFile             = null;
-    String           audioResourcesPath   = null;
-    String           audioTrainSplitPath  = null;
-    String           audioTestSplitPath   = null;
-    String           audioTrainLabelsPath = null;
-    String           audioTestLabelsPath  = null;
+    Properties            processConfiguration = new Properties();
+    LinkedHashSet<String> superset             = new LinkedHashSet<>();
+    LinkedHashSet<String> acceptedLabels       = new LinkedHashSet<>();
+    Logger                logger               = LoggerFactory.getLogger(DataPreProcessor.class);
+    DataSplitUtility      dataSplitUtility     = null;
+    String                dataFile             = null;
+    String                audioResourcesPath   = null;
+    String                audioTrainSplitPath  = null;
+    String                audioTestSplitPath   = null;
+    String                audioTrainLabelsPath = null;
+    String                audioTestLabelsPath  = null;
 
-    Map<String, String> classificationMap = new HashMap<>();
-    Set<String>         trainFileNames    = new HashSet<>();
-    Set<String>         testFileNames     = new HashSet<>();
+    Map<String, String>   classificationMap = new HashMap<>();
+    LinkedHashSet<String> trainFileNames    = new LinkedHashSet<>();
+    LinkedHashSet<String> testFileNames     = new LinkedHashSet<>();
 
     OneHotEncoder labelsEncoder = null;
 
@@ -44,10 +44,9 @@ public class DataPreProcessor {
             tempSuperset.addAll(superset);
 
             dataSplitUtility = new DataSplitUtility(tempSuperset);
-            List<Set<String>> trainTestSplit = dataSplitUtility.generateTrainTestSplit(DEFAULT_TRAIN_PERCENTAGE);
+            List<LinkedHashSet<String>> trainTestSplit = dataSplitUtility.generateTrainTestSplit(DEFAULT_TRAIN_PERCENTAGE);
             this.trainFileNames = trainTestSplit.get(0);
             this.testFileNames = trainTestSplit.get(1);
-
 
             writeSplitSets();
         } catch (IOException io) {
@@ -83,28 +82,35 @@ public class DataPreProcessor {
         this.labelsEncoder = new OneHotEncoder(this.acceptedLabels);
     }
 
-    private void writeSplitSets() throws IOException {
+    private void writeSplitSets() {
+        int filesWrittenCount = 0;
         try (BufferedWriter trainFileWriter = new BufferedWriter(new FileWriter(new File(audioTrainSplitPath)))) {
             for (String fileName : trainFileNames) {
                 trainFileWriter.write(fileName + "\n");
-                logger.info("Now writing fileName = " + fileName);
-                logger.info("Original Classification = " + classificationMap.get(fileName));
+                logger.debug("Now writing fileName = " + fileName);
+                logger.debug("Original Classification = " + classificationMap.get(fileName));
                 writeLabelsFile(audioTrainLabelsPath + fileName, labelsEncoder.getEncodedClass(classificationMap.get(fileName)));
+                filesWrittenCount++;
             }
+        } catch (Exception e) {
+            logger.error("Encountered Exception when writing training data.", e);
         }
+        logger.info("TrainingSet size = " + trainFileNames.size() + " actualFilesWritten = " + filesWrittenCount);
 
         try (BufferedWriter testFileWriter = new BufferedWriter(new FileWriter(new File(audioTestSplitPath)))) {
             for (String fileName : testFileNames) {
                 testFileWriter.write(fileName + "\n");
                 writeLabelsFile(audioTestLabelsPath + fileName, labelsEncoder.getEncodedClass(classificationMap.get(fileName)));
             }
+        } catch (Exception e) {
+            logger.error("Encountered Exception when writing testing data.", e);
         }
     }
 
     private void writeLabelsFile(String fileName, String content) throws IOException {
-        String labelsFileName = fileName.replace(".wav", ".lbl");
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(labelsFileName))) {
-            bufferedWriter.write(content);
-        }
+        String         labelsFileName = fileName.replace(".wav", ".lbl");
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(labelsFileName));
+        bufferedWriter.write(content);
+        bufferedWriter.close();
     }
 }

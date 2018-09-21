@@ -8,15 +8,15 @@ import java.io.IOException;
 import java.util.*;
 
 public class TrainingDataCenter {
-    private static final String DESTINATION_PATH =
+    private static final String                DESTINATION_PATH =
             "/home/sanket/Documents/Data/SoundData/reducedLabelsSet/";
-    private static final String DESTINATION_DIR = "/home/sanket/Documents/Data/SoundData/";
-    private String trainingMetaFile = "";
-    private Set<String> acceptedLabels = new HashSet<>();
-    private Set<String> acceptedFiles = new HashSet<>();
-    private OneHotEncoder oneHotEncoder = null;
-    private Map<String, String> fileLabelMap = new HashMap<>();
-    private Logger logger = LoggerFactory.getLogger(TrainingDataCenter.class);
+    private static final String                DESTINATION_DIR  = "/home/sanket/Documents/Data/SoundData/";
+    private              String                trainingMetaFile = "";
+    private              LinkedHashSet<String> acceptedLabels   = new LinkedHashSet<>();
+    private              Set<String>           acceptedFiles    = new HashSet<>();
+    private              OneHotEncoder         oneHotEncoder    = null;
+    private              Map<String, String>   fileLabelMap     = new HashMap<>();
+    private              Logger                logger           = LoggerFactory.getLogger(TrainingDataCenter.class);
 
     public TrainingDataCenter(List<String> acceptedLabels, String trainingMetaFile) {
         this.acceptedLabels.addAll(acceptedLabels);
